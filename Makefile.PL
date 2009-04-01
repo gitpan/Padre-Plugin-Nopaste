@@ -6,7 +6,12 @@ WriteMakefile
           'VERSION_FROM' => 'lib/Padre/Plugin/Nopaste.pm',
           'PREREQ_PM' => {
                            'App::Nopaste' => 0,
+                           'File::Basename' => 0,
+                           'File::Spec::Functions' => 0,
+                           'Module::Util' => 0,
                            'Padre' => '0.28',
+                           'Padre::Plugin' => '0.28',
+                           'Padre::Task' => '0.30',
                            'Test::More' => 0
                          },
           'INSTALLDIRS' => 'site',

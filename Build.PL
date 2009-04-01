@@ -18,12 +18,20 @@ my $builder = Module::Build->new(
     dist_author         => 'Jerome Quelin <jquelin@gmail.com>',
     dist_version_from   => 'lib/Padre/Plugin/Nopaste.pm',
     build_requires => {
-        'App::Nopaste' => 0,
-        'Test::More'   => 0,
-        'Padre'        => '0.28',
+        'App::Nopaste'  => 0,
+        'Test::More'    => 0,
+        'Padre'         => '0.28',
+        'Padre::Plugin' => '0.28',
+        'Padre::Task'   => '0.30',
+    },
+    requires => {
+        'File::Basename'        => 0,
+        'File::Spec::Functions' => 0,
+        'Module::Util'          => 0,
     },
     add_to_cleanup      => [ 'Padre-Plugin-Nopaste-*', map { ( '*/' x $_ ) . '*~' } 0..5 ],
     create_makefile_pl  => 'traditional',
 );
+$builder->add_build_element('png');
 
 $builder->create_build_script();

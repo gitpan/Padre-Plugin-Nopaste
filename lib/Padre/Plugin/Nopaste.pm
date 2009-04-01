@@ -12,9 +12,13 @@ package Padre::Plugin::Nopaste;
 use strict;
 use warnings;
 
-use base qw{ Padre::Plugin };
+use File::Basename        qw{ fileparse };
+use File::Spec::Functions qw{ catfile };
+use Module::Util          qw{ find_installed };
 
-our $VERSION = '0.1.0';
+use parent qw{ Padre::Plugin Padre::Task };
+
+our $VERSION = '0.2.0';
 
 
 # -- padre plugin api, refer to Padre::Plugin
@@ -22,51 +26,67 @@ our $VERSION = '0.1.0';
 # plugin name
 sub plugin_name { 'Nopaste' }
 
+# plugin icon
+sub plugin_icon {
+    # find resource path
+    my $pkgpath = find_installed(__PACKAGE__);
+    my (undef, $dirname, undef) = fileparse($pkgpath);
+    my $iconpath = catfile( $dirname,
+        'Nopaste', 'share', 'icons', 'paste.png');
+
+    # create and return icon
+    return Wx::Bitmap->new( $iconpath, Wx::wxBITMAP_TYPE_PNG );
+}
+
 # padre interface
-sub padre_interface {
+sub padre_interfaces {
     'Padre::Plugin' => 0.28,
+    'Padre::Task'   => 0.30,
 }
 
 # plugin menu.
 sub menu_plugins_simple {
     my ($self) = @_;
     'Nopaste' => [
-        "Nopaste\tCtrl+Shift+V" => 'nopaste',
+        "Nopaste\tCtrl+Shift+V" => 'schedule',  # launch thread, see Padre::Task
     ];
 }
 
 
-# -- public methods
+# -- padre task api, refer to Padre::Task
 
-sub nopaste {
+sub prepare {
     my ($self) = @_;
 
     my $main     = $self->main;
     my $current  = $main->current;
-    my $document = $current->document;
     my $editor   = $current->editor;
     return unless $editor;
 
     # no selection means send current file
-    my $text = $editor->GetSelectedText || $editor->GetText;
+    $self->{text} = $editor->GetSelectedText || $editor->GetText;
+}
+
+
+sub run {
+    my ($self) = @_;
 
     require App::Nopaste;
-    my $url  = App::Nopaste::nopaste($text);
+    my $url = App::Nopaste::nopaste($self->{text});
 
     # show result in output section
-    $main->show_output(1);
-    my $output = $main->output;
-    $output->AppendText("\n");
+    $self->task_print("\n");
     if ( defined $url ) {
-        $output->style_neutral;
         my $text = "Text successfully nopasted at: $url\n";
-        $output->AppendText($text);
+        $self->task_print($text);
     } else {
-        $output->style_bad;
         my $text = "Error while nopasting text\n";
-        $output->AppendText($text);
+        $self->task_warn($text);
     }
 }
+
+
+# -- public methods
 
 
 # -- private methods
@@ -91,9 +111,9 @@ Padre::Plugin::Nopaste - send code on a nopaste website from padre
 
 =head1 DESCRIPTION
 
-This plugin allows one to send stuff from Padre to a nopaste website,
-allowing for easy code / whatever sharing without having to open a
-browser.
+This plugin allows one to send stuff from Padre to a nopaste website
+with Ctrl+Shift+V, allowing for easy code / whatever sharing without
+having to open a browser.
 
 It is using C<App::Nopaste> underneath, so check this module's pod for
 more information.
@@ -112,20 +132,29 @@ The following methods are implemented:
 
 =item menu_plugins_simple()
 
-=item padre_interface()
+=item padre_interfaces()
+
+=item plugin_icon()
 
 =item plugin_name()
 
 =back
 
 
-=head2 Formatting methods
+
+=head2 Standard Padre::Task API
+
+In order not to freeze Padre during web access, nopasting is done in a thread,
+as implemented by C<Padre::Task>. Refer to this module's documentation for more
+information.
+
+The following methods are implemented:
 
 =over 4
 
-=item * nopaste()
+=item * prepare()
 
-Send the current selection to a nopaste site.
+=item * run()
 
 =back
 
@@ -142,6 +171,9 @@ your bug as I make changes.
 
 
 =head1 SEE ALSO
+
+Plugin icon courtesy of Mark James, at
+L<http://www.famfamfam.com/lab/icons/silk/>.
 
 Our git repository is located at L<git://repo.or.cz/padre-plugin-nopaste.git>,
 and can be browsed at L<http://repo.or.cz/w/padre-plugin-nopaste.git>.
