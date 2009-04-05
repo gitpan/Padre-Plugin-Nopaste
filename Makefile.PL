@@ -12,7 +12,8 @@ WriteMakefile
                            'Padre' => '0.28',
                            'Padre::Plugin' => '0.28',
                            'Padre::Task' => '0.30',
-                           'Test::More' => 0
+                           'Test::More' => 0,
+                           'parent' => 0
                          },
           'INSTALLDIRS' => 'site',
           'EXE_FILES' => []
