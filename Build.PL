@@ -7,6 +7,7 @@
 #
 #
 
+use 5.006;
 use strict;
 use warnings;
 
@@ -25,14 +26,21 @@ my $builder = Module::Build->new(
         'File::Basename'        => 0,
         'File::Spec::Functions' => 0,
         'Module::Util'          => 0,
-        'Padre'                 => '0.28',
-        'Padre::Plugin'         => '0.28',
-        'Padre::Task'           => '0.30',
+        'Padre'                 => '0.65',
+        'Padre::Plugin'         => '0.65',
+        'Padre::Task'           => '0.65',
         'parent'                => 0,
+        'perl'                  => '5.008005', #as Padre
     },
     add_to_cleanup      => [ 'Padre-Plugin-Nopaste-*', map { ( '*/' x $_ ) . '*~' } 0..5 ],
     create_makefile_pl  => 'traditional',
+    meta_merge     => {
+        resources => {
+            homepage   => 'http://padre.perlide.org/',
+            repository => 'http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste/',
+        }
+    },
 );
 $builder->add_build_element('png');
-
+$builder->add_build_element('mo');
 $builder->create_build_script();
