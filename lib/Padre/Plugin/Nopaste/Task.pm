@@ -6,7 +6,7 @@ use warnings;
 use Padre::Task ();
 use Padre::Logger;
 
-our $VERSION = '0.3.0';
+our $VERSION = '0.3.1';
 our @ISA     = 'Padre::Task';
 
 =pod
@@ -68,6 +68,24 @@ sub process {
 __END__
 
 =pod
+
+=head1 Standard Padre::Task API
+
+In order not to freeze Padre during web access, nopasting is done in a thread,
+as implemented by C<Padre::Task>. Refer to this module's documentation for more
+information.
+
+The following methods are implemented:
+
+=over 4
+
+=item * prepare()
+
+=item * process()
+
+=item * run()
+
+=back
 
 =head1 AUTHOR
 
