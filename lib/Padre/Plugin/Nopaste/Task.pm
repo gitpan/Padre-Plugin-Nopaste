@@ -1,106 +1,154 @@
 package Padre::Plugin::Nopaste::Task;
 
-use 5.008;
-use strict;
-use warnings;
-use Padre::Task ();
-use Padre::Logger;
+use v5.10;
+use strictures 1;
 
-our $VERSION = '0.3.1';
-our @ISA     = 'Padre::Task';
+use Carp qw( croak );
+our $VERSION = '0.04';
 
-=pod
-
-=head1 NAME
-
-Padre::Plugin::Nopaste::Task
-
-=head1 SYNOPSIS
+use Padre::Task   ();
+use Padre::Unload ();
+use App::Nopaste 'nopaste';
+use parent qw{ Padre::Task };
 
 
-=head1 DESCRIPTION
+#######
+# Default Constructor from Padre::Task POD
+#######
+sub new {
+	my $class = shift;
+	my $self  = $class->SUPER::new(@_);
 
-Async thread that does real nopaste
+	# Assert required command parameter
+	if ( not defined $self->{text} ) {
+		croak "Failed to provide any text to the Nopaste task\n";
+	}
 
-=cut
-
-sub prepare {
-    my ($self) = @_;
-
-    my $main     = $self->{document}->main;
-    my $current  = $main->current;
-    my $editor   = $current->editor;
-    return unless $editor;
-
-    # no selection means send current file
-    $self->{text} = $editor->GetSelectedText || $editor->GetText;
+	return $self;
 }
 
+#######
+# Default run re: Padre::Task POD
+#######
 sub run {
 	my $self = shift;
 
-	$self->process();
+	my $url = nopaste(
 
-	return 1;
-}
+		# text => "Full text to paste (the only mandatory argument)",
+		text => $self->{text},
 
-sub process {
-    my ($self) = @_;
+		# desc => "This is a test no-paste",
+		nick => $self->{nick},
+		lang => 'perl',
 
-    require App::Nopaste;
-    my $url = App::Nopaste::nopaste($self->{text});
+		# chan => '#padre',
+		chan => $self->{channel},
 
-    # show result in output section
-    if ( defined $url ) {
-        my $text = "Text successfully nopasted at: $url\n";
-        $self->{err}=0;
-        $self->{message}=$text;
-    } else {
-        my $text = "Error while nopasting text\n";
-        $self->{err}=1;
-        $self->{message}=$text;
-    }
-    return;
+		# private       => 1,                        # default: 0
+		# # this is the default, but maybe you want to do something different
+		
+		error_handler => sub {
+			my ( $error, $service ) = @_;
+			$self->{error}   = 1;
+			$self->{message} = "$service: $error";
+		},
+		warn_handler => sub {
+			my ( $warning, $service ) = @_;
+			$self->{error}   = 1;
+			$self->{message} = "$service: $warning";
+		},
+
+		# you may specify the services to use - but you don't have to
+		services => [ $self->{services}, ],
+	);
+
+	# show result in output section
+	if ( defined $url ) {
+		my $text_output = "Text successfully nopasted at: $url\n";
+		$self->{error}   = 0;
+		$self->{message} = $text_output;
+	}
+
+	return;
 }
 
 1;
 
 __END__
 
+
 =pod
+
+=head1 NAME
+
+Padre::Plugin::Nopaste::Task - Padre, The Perl IDE.
+
+=head1 VERSION
+
+version  0.04
+
+=head1 SYNOPSIS
+
+Perform the Nopaste Task as a background Job, help to keep Padre sweet.
+
+=head1 DESCRIPTION
+
+Async thread that does real nopaste
 
 =head1 Standard Padre::Task API
 
 In order not to freeze Padre during web access, nopasting is done in a thread,
-as implemented by C<Padre::Task>. Refer to this module's documentation for more
+as implemented by L<Padre::Task>. Refer to this module's documentation for more
 information.
 
 The following methods are implemented:
 
+=head1 METHODS
+
 =over 4
 
-=item * prepare()
+=item * new()
 
-=item * process()
+default Padre Task constructor, see Padre::Task POD
 
 =item * run()
 
+This is where all the work is done.
+
 =back
+
+=head1 BUGS AND LIMITATIONS
+
+None known.
+
+=head1 DEPENDENCIES
+
+Padre::Task, App::Nopaste
+
+=head1 SEE ALSO
+
+For all related information (bug reporting, source code repository,
+etc.), refer to L<Padre::Plugin::Nopaste>.
 
 =head1 AUTHOR
 
-Alexandr Ciornii, Jerome Quelin, C<< <jquelin@cpan.org> >>
+Kevin Dawson E<lt>bowtie@cpan.orgE<gt>
+
+Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Alexandr Ciornii,
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2008-2010 The Padre development team as listed in Padre.pm.
+Copyright 2008-2012 The Padre development team as listed in Padre.pm.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl 5 itself.
 
 =cut
 
-# Copyright 2008-2010 The Padre development team as listed in Padre.pm.
+# Copyright 2008-2012 The Padre development team as listed in Padre.pm.
 # LICENSE
 # This program is free software; you can redistribute it and/or
 # modify it under the same terms as Perl 5 itself.

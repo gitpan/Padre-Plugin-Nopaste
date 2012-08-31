@@ -1,0 +1,65 @@
+{
+   "abstract" : "Padre, The Perl IDE.",
+   "author" : [
+      "Kevin Dawson <bowtie@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.120921",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Padre-Plugin-Nopaste",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "share",
+         "t",
+         "xt"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59",
+            "Test::More" : "0.98",
+            "Test::Pod" : "1.45",
+            "Test::Pod::Coverage" : "1.08"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "App::Nopaste" : "0.35",
+            "Carp" : "1.26",
+            "Moo" : "1.000003",
+            "Padre" : "0.96",
+            "Try::Tiny" : "0.11",
+            "perl" : "5.010",
+            "strictures" : "1.004001"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://padre.perlide.org/trac"
+      },
+      "homepage" : "http://padre.perlide.org/trac/wiki/PadrePluginNopaste",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "url" : "http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste/"
+      }
+   },
+   "version" : "0.04",
+   "x_module_name" : "Padre::Plugin::Nopaste"
+}

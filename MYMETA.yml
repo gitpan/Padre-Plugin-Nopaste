@@ -9,14 +9,12 @@ build_requires:
   Test::Pod::Coverage: 1.08
 configure_requires:
   ExtUtils::MakeMaker: 6.59
-distribution_type: module
 dynamic_config: 0
-generated_by: 'Module::Install version 1.06'
+generated_by: 'Module::Install version 1.06, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-module_name: Padre::Plugin::Nopaste
 name: Padre-Plugin-Nopaste
 no_index:
   directory:
@@ -30,7 +28,7 @@ requires:
   Moo: 1.000003
   Padre: 0.96
   Try::Tiny: 0.11
-  perl: 5.10.0
+  perl: 5.010
   strictures: 1.004001
 resources:
   bugtracker: http://padre.perlide.org/trac
@@ -38,3 +36,4 @@ resources:
   license: http://dev.perl.org/licenses/
   repository: http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste/
 version: 0.04
+x_module_name: Padre::Plugin::Nopaste
