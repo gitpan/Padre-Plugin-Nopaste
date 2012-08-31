@@ -1,5 +1,5 @@
 ---
-abstract: 'Padre, The Perl IDE.'
+abstract: 'NoPaste plugin for Padre, The Perl IDE.'
 author:
   - 'Kevin Dawson <bowtie@cpan.org>'
 build_requires:
@@ -35,5 +35,5 @@ resources:
   homepage: http://padre.perlide.org/trac/wiki/PadrePluginNopaste
   license: http://dev.perl.org/licenses/
   repository: http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste/
-version: 0.50
+version: 0.06
 x_module_name: Padre::Plugin::Nopaste
