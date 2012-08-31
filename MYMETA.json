@@ -60,6 +60,6 @@
          "url" : "http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste/"
       }
    },
-   "version" : "0.40",
+   "version" : "0.50",
    "x_module_name" : "Padre::Plugin::Nopaste"
 }
