@@ -3,7 +3,7 @@ package Padre::Plugin::Nopaste;
 use v5.10;
 use strictures 1;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Try::Tiny;
 use Padre::Unload ();
@@ -13,7 +13,7 @@ use parent qw{
 	Padre::Role::Task
 };
 use Padre::Plugin::Nopaste::Services;
-
+use Carp;
 
 # Turn on $OUTPUT_AUTOFLUSH
 local $| = 1;
@@ -66,6 +66,8 @@ sub plugin_enable {
 	# Tests for externals used by Preference's
 	if ( $config->identity_nickname ) {
 		$nick = 1;
+	} else {
+		croak "\nYou need to set 'identity_nickname' \n Look in Tools -> Preferences -> Advance\n\n";
 	}
 
 	#Set/ReSet Config data
@@ -335,6 +337,9 @@ sub event_on_context_menu {
 1;
 __END__
 
+=pod
+
+=encoding utf8
 
 =head1 NAME
 
@@ -342,7 +347,7 @@ Padre::Plugin::Nopaste - NoPaste plugin for Padre, The Perl IDE.
 
 =head1 VERSION
 
-version  0.06
+version: 0.07
 
 =head1 SYNOPSIS
 
@@ -442,11 +447,11 @@ You can also look for information on this module at:
 
 L<http://padre.perlide.org/trac/wiki/PadrePluginNopaste>
 
-=item * Our svn repository 
+=item * Our svn repository
 
-L<http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste>, 
-and can be browsed at 
-L<http://padre.perlide.org/browser/trunk/Padre-Plugin-Nopaste>.
+L<http://svn.perlide.org/padre/trunk/Padre-Plugin-Nopaste>,
+ and can be browsed at
+  L<http://padre.perlide.org/browser/trunk/Padre-Plugin-Nopaste>.
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
@@ -469,16 +474,20 @@ Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
 
 Ahmad M. Zawawi E<lt>ahmad.zawawi@gmail.comE<gt>
 
+Alexandr Ciornii E<lt>alexchorny@gmail.comE<gt>
+
+
 =head1 COPYRIGHT & LICENSE
 
-Copyright (c) 2009 Jerome Quelin, all rights reserved.
+Copyright E<copy> 2013 the Padre::Plugin::Nopaste L</AUTHOR> and L</CONTRIBUTORS>
+ as listed above.
 
 This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+ it under the same terms as Perl itself.
 
 =cut
 
-# Copyright 2008-2012 The Padre development team as listed in Padre.pm.
+# Copyright 2008-2013 The Padre development team as listed in Padre.pm.
 # LICENSE
 # This program is free software; you can redistribute it and/or
 # modify it under the same terms as Perl 5 itself.
